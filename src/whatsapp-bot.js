@@ -464,6 +464,20 @@ function createSingleton() {
     }
   }
 
+  function getStatus() {
+    return {
+      ready: isReady,
+      connected: isReady && botState === "ready",
+      hasQR: Boolean(qrDataUrl),
+      state: botState,
+      lastError,
+    };
+  }
+
+  async function sendWhatsAppMessage(phone, text) {
+    await sendTextMessage(phone, text);
+  }
+
   function getBotQrStatus() {
     return {
       qrDataUrl,
@@ -482,6 +496,8 @@ function createSingleton() {
   return {
     startBot,
     sendReceipt,
+    getStatus,
+    sendWhatsAppMessage,
     getBotQrStatus,
   };
 }
@@ -492,4 +508,6 @@ const singleton =
 
 export const startBot = singleton.startBot;
 export const sendReceipt = singleton.sendReceipt;
+export const getStatus = singleton.getStatus;
+export const sendWhatsAppMessage = singleton.sendWhatsAppMessage;
 export const getBotQrStatus = singleton.getBotQrStatus;
