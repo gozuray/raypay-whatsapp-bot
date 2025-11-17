@@ -2,9 +2,9 @@
   "name": "raypay-whatsapp-bot",
   "version": "1.0.0",
   "type": "module",
-  "main": "src/whatsapp-bot.js",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node src/whatsapp-bot.js"
+    "start": "node src/server.js"
   },
   "dependencies": {
     "dotenv": "^17.2.3",

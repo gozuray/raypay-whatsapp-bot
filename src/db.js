@@ -1,33 +1,34 @@
-// src/db.js
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
+import { MongoClient } from 'mongodb';
+
 dotenv.config();
 
-import { MongoClient } from "mongodb";
-
-const MONGODB_URI = process.env.MONGODB_URI;
-const DB_NAME = process.env.MONGODB_DB || "raypay";
-
-let client;
-let db;
+let client = null;
+let database = null;
 
 export async function connectMongo() {
-  if (db) return db;
+  if (database) return database;
 
-  if (!MONGODB_URI) {
-    throw new Error("Falta MONGODB_URI en .env");
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error('Falta MONGODB_URI en .env');
   }
 
-  client = new MongoClient(MONGODB_URI, {});
-  await client.connect();
-  db = client.db(DB_NAME);
+  const dbName = process.env.MONGODB_DB;
+  if (!dbName) {
+    throw new Error('Falta MONGODB_DB en .env');
+  }
 
-  console.log("✅ MongoDB conectado (bot)");
-  return db;
+  client = new MongoClient(uri);
+  await client.connect();
+  database = client.db(dbName);
+  console.log('✅ MongoDB conectado');
+  return database;
 }
 
 export function getDB() {
-  if (!db) {
-    throw new Error("MongoDB no inicializado. Llama connectMongo()");
+  if (!database) {
+    throw new Error('Base de datos no inicializada. Ejecuta connectMongo() primero.');
   }
-  return db;
+  return database;
 }
