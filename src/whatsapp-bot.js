@@ -20,7 +20,7 @@ function createSingleton() {
   const CLIENT_ID = "raypay-bot";
   // Usar el mismo identificador que RemoteAuth para la sesión
   const SESSION_NAME = CLIENT_ID;
-  const DATA_PATH = path.resolve(process.cwd(), "auth");
+  const DATA_PATH = path.resolve("./auth");
   const SESSION_ZIP_PATH = path.join(DATA_PATH, `${SESSION_NAME}.zip`);
   const SESSION_COLLECTION = "whatsapp_sessions";
   const LOG_COLLECTION = "whatsapp_logs";
@@ -193,17 +193,16 @@ function createSingleton() {
     }
   }
 
-  function handleQr(qr) {
-    return qrcode
-      .toDataURL(qr)
-      .then((dataUrl) => {
-        qrDataUrl = dataUrl;
-        qrUpdatedAt = new Date().toISOString();
-        isReady = false;
-        botState = "qr";
-        console.log(`${logPrefix} Escanea el nuevo QR para iniciar sesión`);
-      })
-      .catch((err) => console.error(`${logPrefix} Error generando QR`, err));
+  async function handleQr(qr) {
+    try {
+      qrDataUrl = await qrcode.toDataURL(qr);
+      qrUpdatedAt = Date.now();
+      botState = "qr";
+      isReady = false;
+      console.log("[WhatsApp Bot] Nuevo QR listo");
+    } catch (err) {
+      console.error(`${logPrefix} Error generando QR`, err);
+    }
   }
 
   function handleReady() {
