@@ -3,6 +3,7 @@ import {
   getStatus,
   getBotQrStatus,
   sendWhatsAppMessage,
+  startBot,
 } from "./whatsapp-bot.js";
 
 const app = express();
@@ -26,13 +27,24 @@ app.get("/status", (_req, res) => {
   });
 });
 
-app.get("/qr", (_req, res) => {
-  const { ready } = ensureReady(res);
-  if (!ready) return;
+app.get("/qr", async (_req, res) => {
+  try {
+    await startBot();
+  } catch (error) {
+    res
+      .status(502)
+      .json({ error: error?.message || "No se pudo iniciar el bot" });
+    return;
+  }
 
-  const { qrDataUrl } = getBotQrStatus();
+  const { qrDataUrl, state, lastError } = getBotQrStatus();
+
   if (!qrDataUrl) {
-    res.status(404).json({ error: "No hay un QR disponible" });
+    res.status(404).json({
+      error: "No hay un QR disponible",
+      state,
+      lastError,
+    });
     return;
   }
 
