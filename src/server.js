@@ -37,18 +37,9 @@ app.get("/qr", async (_req, res) => {
     return;
   }
 
-  const { qrDataUrl, state, lastError } = getBotQrStatus();
+  const { qrDataUrl, updatedAt, state, lastError, ready } = getBotQrStatus();
 
-  if (!qrDataUrl) {
-    res.status(404).json({
-      error: "No hay un QR disponible",
-      state,
-      lastError,
-    });
-    return;
-  }
-
-  res.json({ qrDataUrl });
+  res.json({ qrDataUrl: qrDataUrl || null, updatedAt, state, lastError, ready });
 });
 
 app.post("/send", async (req, res) => {

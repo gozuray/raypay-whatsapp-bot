@@ -38,11 +38,11 @@ app.get("/qr", async (_req, res) => {
     const { qrDataUrl } = await response.json();
 
     if (!qrDataUrl) {
-      res
-        .status(404)
-        .send(
-          renderHtml("<h2>QR no disponible (bot ya conectado o aún sin generar)</h2>")
-        );
+      res.send(
+        renderHtml(
+          "<h2>QR no disponible (bot ya conectado o aún sin generar)</h2>"
+        )
+      );
       return;
     }
 
