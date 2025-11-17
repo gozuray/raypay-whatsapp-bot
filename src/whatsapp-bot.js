@@ -20,7 +20,8 @@ function createSingleton() {
   const CLIENT_ID = "raypay-bot";
   // Usar el mismo identificador que RemoteAuth para la sesión
   const SESSION_NAME = CLIENT_ID;
-  const SESSION_ZIP_PATH = path.join(process.cwd(), `${SESSION_NAME}.zip`);
+  const DATA_PATH = path.resolve(process.cwd(), "auth");
+  const SESSION_ZIP_PATH = path.join(DATA_PATH, `${SESSION_NAME}.zip`);
   const SESSION_COLLECTION = "whatsapp_sessions";
   const LOG_COLLECTION = "whatsapp_logs";
   const LOG_TTL_DAYS = Number(process.env.LOG_TTL_DAYS || 7);
@@ -40,12 +41,16 @@ function createSingleton() {
   let lastError = null;
 
   async function ensureAuthFolder() {
-  if (!authFolderPath) {
-    authFolderPath = "/tmp/whatsapp-session";
-    await fs.promises.mkdir(authFolderPath, { recursive: true });
+    if (authFolderPromise) return authFolderPromise;
+
+    authFolderPromise = (async () => {
+      authFolderPath = DATA_PATH;
+      await fs.promises.mkdir(authFolderPath, { recursive: true });
+      return authFolderPath;
+    })();
+
+    return authFolderPromise;
   }
-  return authFolderPath;
-}
 
 
 
@@ -164,6 +169,7 @@ function createSingleton() {
   }
 
   async function prepareRemoteSession(store) {
+    await ensureAuthFolder();
     const hasSession = await store.sessionExists({ clientId: SESSION_NAME });
     if (!hasSession) return;
     await store.extract({
@@ -246,6 +252,10 @@ function createSingleton() {
 
   async function cleanupOldTempAuthFolders() {
     try {
+      if (!authFolderPath || !authFolderPath.startsWith(os.tmpdir())) {
+        return;
+      }
+
       const base = os.tmpdir();
       const entries = await fs.promises.readdir(base, { withFileTypes: true });
       await Promise.all(
