@@ -1,6 +1,8 @@
-import { Client, RemoteAuth } from 'whatsapp-web.js';
+import whatsapp from 'whatsapp-web.js';
 import qrcode from 'qrcode';
 import MongoAuthStore from './auth/mongoAuth.js';
+
+const { Client, RemoteAuth } = whatsapp;
 
 let client;
 let qrDataUrl = null;
