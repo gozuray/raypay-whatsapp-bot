@@ -1,1 +1,0 @@
-# raypay-whatsapp-bot
