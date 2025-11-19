@@ -1,0 +1,10 @@
+{
+  "name": "wwebjs-remote-auth",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "description": "Mongo-backed RemoteAuth store for whatsapp-web.js",
+  "peerDependencies": {
+    "mongoose": "*"
+  }
+}
