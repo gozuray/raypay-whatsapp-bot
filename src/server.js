@@ -12,13 +12,22 @@ app.get('/status', (_req, res) => {
   res.json({ status: getStatus() });
 });
 
-app.get('/qr', (_req, res) => {
+app.get("/qr", (req, res) => {
   const qr = getQr();
+
   if (!qr) {
-    return res.status(404).json({ message: 'QR not available. Client might already be authenticated.' });
+    return res.send("QR no disponible. Espera unos segundos y actualiza.");
   }
-  res.json({ qr });
+
+  res.send(`
+    <html>
+      <body style="display:flex;justify-content:center;align-items:center;height:100vh;background:#111;">
+        <img src="${qr}" style="width:350px;height:350px"/>
+      </body>
+    </html>
+  `);
 });
+
 
 app.post('/send', async (req, res) => {
   const { phone, message } = req.body;
