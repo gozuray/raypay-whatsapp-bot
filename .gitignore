@@ -1,6 +1,7 @@
 node_modules/
 .env
 *.zip
+.wwebjs_cache/
 .webjs_cache/
 auth/
 *.log
