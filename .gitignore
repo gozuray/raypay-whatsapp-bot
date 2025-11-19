@@ -1,7 +1,6 @@
-node_modules/
+node_modules
 .env
-*.zip
-.wwebjs_cache/
-.webjs_cache/
-auth/
-*.log
+.DS_Store
+npm-debug.log*
+pnpm-debug.log*
+yarn-error.log
